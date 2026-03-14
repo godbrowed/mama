@@ -11,175 +11,73 @@
   <link rel="stylesheet" href="./css/style.css" />
 </head>
 <body>
+  <div class="page-glow page-glow--one"></div>
+  <div class="page-glow page-glow--two"></div>
+
   <header class="header">
     <div class="container header__inner">
       <a class="logo" href="./index.html#home">Lira <span>Candles</span></a>
 
       <nav class="nav" id="nav">
-        <a href="#about">Про бренд</a>
-        <a href="#catalog">Каталог</a>
-        <a href="#advantages">Переваги</a>
-        <a href="#gallery">Галерея</a>
-        <a href="#contacts">Контакти</a>
-    </nav>
+        <a href="./index.html#about">Про бренд</a>
+        <a href="./index.html#catalog">Популярне</a>
+        <a href="./catalog.html">Весь каталог</a>
+        <a href="./index.html#gallery">Галерея</a>
+        <a href="./index.html#contacts">Контакти</a>
+      </nav>
 
       <div class="header__actions">
-        <a class="btn btn--dark btn--small hide-mobile" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Instagram</a>
+        <a class="btn btn--dark btn--small hide-mobile" href="PASTE_MAIN_ORDER_LINK" target="_blank" rel="noopener">Замовити</a>
+        <button class="burger" id="burger" aria-label="Відкрити меню" aria-expanded="false" aria-controls="nav">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="section section--soft" style="padding-top: 140px;">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <p class="section-label">Каталог</p>
-            <h1>Усі товари</h1>
-          </div>
-
-          <a class="btn btn--light btn--small" href="./index.html">Назад на головну</a>
+    <section class="section catalog-hero">
+      <div class="container catalog-hero__inner reveal">
+        <div>
+          <p class="section-label">Каталог</p>
+          <h1>Усі товари</h1>
         </div>
+        <a class="btn btn--light btn--small" href="./index.html">Назад на головну</a>
+      </div>
+    </section>
 
-        <div class="catalog-grid">
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-1.jpg" alt="Ромашка у кашпо" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Ромашка у кашпо</h3><strong>₴300</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-2.jpg" alt="Троянда в кашпо" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Троянда в кашпо</h3><strong>₴300</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-3.jpg" alt="Пара ромашок у кашпо з підставкою" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Пара ромашок у кашпо з підставкою</h3><strong>₴600</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-4.jpg" alt="Ромашка в склянці" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Ромашка в склянці</h3><strong>₴400</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-5.jpg" alt="Набір Лілія" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Набір &quot;Лілія&quot;</h3><strong>₴400</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-6.jpg" alt="Мушля" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Мушля</h3><strong>₴150</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-7.jpg" alt="ins name" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Морозиво в склянці</h3><strong>₴400</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-8.jpg" alt="ins name" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Свічка "Віночок"</h3><strong>₴400</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-9.jpg" alt="ins name" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Свічка "Пелюстки троянди"</h3><strong>₴60</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-10.jpg" alt="ins name" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Свічка "Серце троянди"</h3><strong>₴60</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-11.jpg" alt="ins name" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Ромашки в кашпо</h3><strong>₴300</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-12.jpg" alt="ins name" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Квіти в склянці</h3><strong>₴400</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-13.jpg" alt="ins name" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Троянди в склянці</h3><strong>₴400</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-14.jpg" alt="ins name" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Келих з бутонами</h3><strong>₴400</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
-
-          <article class="product-card card">
-            <div class="product-card__image image-frame"><img src="./images/product-15.jpg" alt="ins name" /></div>
-            <div class="product-card__body">
-              <div class="product-card__top"><h3>Інь-Янь</h3><strong>₴500</strong></div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
-            </div>
-          </article>
+    <section class="section section--soft section--catalog">
+      <div class="container">
+        <div class="catalog-grid catalog-grid--all">
+          <article class="product-card card reveal tilt-card"><div class="product-card__image image-frame"><img src="./images/product-1.jpg" alt="Ромашка у кашпо" /></div><div class="product-card__body"><div class="product-card__top"><h3>Ромашка у кашпо</h3><strong>₴300</strong></div><p>Яскравий квітковий акцент.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_1" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal reveal-delay-1 tilt-card"><div class="product-card__image image-frame"><img src="./images/product-2.jpg" alt="Троянда в кашпо" /></div><div class="product-card__body"><div class="product-card__top"><h3>Троянда в кашпо</h3><strong>₴300</strong></div><p>Ніжний декоративний формат.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_2" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal reveal-delay-2 tilt-card"><div class="product-card__image image-frame"><img src="./images/product-3.jpg" alt="Пара ромашок у кашпо з підставкою" /></div><div class="product-card__body"><div class="product-card__top"><h3>Пара ромашок</h3><strong>₴600</strong></div><p>Подвійна композиція на подарунок.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_3" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal tilt-card"><div class="product-card__image image-frame"><img src="./images/product-4.jpg" alt="Ромашка в склянці" /></div><div class="product-card__body"><div class="product-card__top"><h3>Ромашка в склянці</h3><strong>₴400</strong></div><p>Квіткова свічка в склі.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_4" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal reveal-delay-1 tilt-card"><div class="product-card__image image-frame"><img src="./images/product-5.jpg" alt="Набір Лілія" /></div><div class="product-card__body"><div class="product-card__top"><h3>Набір “Лілія”</h3><strong>₴400</strong></div><p>Акуратний набір у теплій гамі.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_5" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal reveal-delay-2 tilt-card"><div class="product-card__image image-frame"><img src="./images/product-6.jpg" alt="Мушля" /></div><div class="product-card__body"><div class="product-card__top"><h3>Мушля</h3><strong>₴150</strong></div><p>Мінімалістична декоративна форма.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_6" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal tilt-card"><div class="product-card__image image-frame"><img src="./images/product-7.jpg" alt="Морозиво в склянці" /></div><div class="product-card__body"><div class="product-card__top"><h3>Морозиво в склянці</h3><strong>₴400</strong></div><p>Десертний акцент у склі.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_7" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal reveal-delay-1 tilt-card"><div class="product-card__image image-frame"><img src="./images/product-8.jpg" alt="Свічка Віночок" /></div><div class="product-card__body"><div class="product-card__top"><h3>Свічка “Віночок”</h3><strong>₴400</strong></div><p>Форма з мʼякою пластикою.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_8" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal reveal-delay-2 tilt-card"><div class="product-card__image image-frame"><img src="./images/product-9.jpg" alt="Свічка Пелюстки троянди" /></div><div class="product-card__body"><div class="product-card__top"><h3>“Пелюстки троянди”</h3><strong>₴60</strong></div><p>Маленька романтична деталь.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_9" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal tilt-card"><div class="product-card__image image-frame"><img src="./images/product-10.jpg" alt="Свічка Серце троянди" /></div><div class="product-card__body"><div class="product-card__top"><h3>“Серце троянди”</h3><strong>₴60</strong></div><p>Компактний подарунковий формат.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_10" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal reveal-delay-1 tilt-card"><div class="product-card__image image-frame"><img src="./images/product-11.jpg" alt="Ромашки в кашпо" /></div><div class="product-card__body"><div class="product-card__top"><h3>Ромашки в кашпо</h3><strong>₴300</strong></div><p>Сонячний квітковий декор.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_11" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal reveal-delay-2 tilt-card"><div class="product-card__image image-frame"><img src="./images/product-12.jpg" alt="Квіти в склянці" /></div><div class="product-card__body"><div class="product-card__top"><h3>Квіти в склянці</h3><strong>₴400</strong></div><p>Квіткова композиція в склі.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_12" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal tilt-card"><div class="product-card__image image-frame"><img src="./images/product-13.jpg" alt="Троянди в склянці" /></div><div class="product-card__body"><div class="product-card__top"><h3>Троянди в склянці</h3><strong>₴400</strong></div><p>Обʼємна трояндова композиція.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_13" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal reveal-delay-1 tilt-card"><div class="product-card__image image-frame"><img src="./images/product-14.jpg" alt="Келих з бутонами" /></div><div class="product-card__body"><div class="product-card__top"><h3>Келих з бутонами</h3><strong>₴400</strong></div><p>Ефектний подарунковий варіант.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_14" target="_blank" rel="noopener">Замовити</a></div></article>
+          <article class="product-card card reveal reveal-delay-2 tilt-card"><div class="product-card__image image-frame"><img src="./images/product-15.jpg" alt="Інь-Янь" /></div><div class="product-card__body"><div class="product-card__top"><h3>Інь-Янь</h3><strong>₴500</strong></div><p>Сучасна форма з характером.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_15" target="_blank" rel="noopener">Замовити</a></div></article>
+                    <article class="product-card card reveal reveal-delay-2 tilt-card"><div class="product-card__image image-frame"><img src="./images/product-16.jpg" alt="Інь-Янь" /></div><div class="product-card__body"><div class="product-card__top"><h3>Ромашка в склянці</h3><strong>₴400</strong></div><p>Декор для внутрішнього простору.</p><a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_15" target="_blank" rel="noopener">Замовити</a></div></article>
         </div>
       </div>
     </section>
   </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© 2026 Lira Candles. Усі права захищені.</p>
+      <a href="./index.html">На головну ↑</a>
+    </div>
+  </footer>
 
   <script src="./js/main.js"></script>
 </body>

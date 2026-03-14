@@ -11,21 +11,24 @@
   <link rel="stylesheet" href="./css/style.css" />
 </head>
 <body>
-  <header class="header">
+  <div class="page-glow page-glow--one"></div>
+  <div class="page-glow page-glow--two"></div>
+
+  <header class="header" id="top">
     <div class="container header__inner">
       <a class="logo" href="#home">Lira <span>Candles</span></a>
 
       <nav class="nav" id="nav">
         <a href="#about">Про бренд</a>
         <a href="#catalog">Каталог</a>
-        <a href="#advantages">Переваги</a>
+        <a href="./catalog.html">Весь каталог</a>
         <a href="#gallery">Галерея</a>
         <a href="#contacts">Контакти</a>
       </nav>
 
       <div class="header__actions">
-        <a class="btn btn--dark btn--small hide-mobile" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Instagram</a>
-        <button class="burger" id="burger" aria-label="Відкрити меню">
+        <a class="btn btn--dark btn--small hide-mobile" href="PASTE_MAIN_ORDER_LINK" target="_blank" rel="noopener">Замовити</a>
+        <button class="burger" id="burger" aria-label="Відкрити меню" aria-expanded="false" aria-controls="nav">
           <span></span>
           <span></span>
           <span></span>
@@ -35,84 +38,100 @@
   </header>
 
   <main>
-    <section class="hero" id="home">
-      <div class="container hero__grid">
-        <div class="hero__content">
-          <div class="badge">Натуральний соєвий віск • ручна робота • естетичний декор</div>
-          <h1>Свічки, які додають дому тепла, затишку й красивої атмосфери</h1>
+    <section class="hero hero--redesign" id="home">
+      <div class="container hero__layout">
+        <div class="hero__copy reveal">
+          <div class="eyebrow">handmade candles · soy wax · gift ready</div>
+          <h1>Сучасні декоративні свічки в теплій естетиці дому</h1>
           <p>
-            Стильні декоративні та ароматичні свічки ручної роботи для себе, на подарунок або для особливого настрою вдома.
+            Ніжні форми, натуральний соєвий віск і красиві композиції для затишку, подарунків та стильного інтерʼєру.
           </p>
 
           <div class="hero__buttons">
-            <a class="btn btn--primary" href="#catalog">Дивитись каталог</a>
-            <a class="btn btn--light" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити в Instagram</a>
+            <a class="btn btn--primary" href="#catalog">Популярні позиції</a>
+            <a class="btn btn--light" href="./catalog.html">Весь каталог</a>
           </div>
 
-          <div class="hero__stats">
-            <div class="stat-card">
-              <strong>Handmade</strong>
-              <span>кожна свічка зроблена вручну</span>
-            </div>
-            <div class="stat-card">
-              <strong>Gift ready</strong>
-              <span>ідея для подарунку та декору</span>
-            </div>
-            <div class="stat-card">
-              <strong>Custom</strong>
-              <span>можна зробити індивідуальне замовлення</span>
-            </div>
+          <div class="hero__mini-grid">
+            <article class="mini-card reveal reveal-delay-1">
+              <strong>15+</strong>
+              <span>позицій у каталозі</span>
+            </article>
+            <article class="mini-card reveal reveal-delay-2">
+              <strong>1–3 дні</strong>
+              <span>середній термін виготовлення</span>
+            </article>
+            <article class="mini-card reveal reveal-delay-3">
+              <strong>Gift mood</strong>
+              <span>ідеально для подарунків та декору</span>
+            </article>
           </div>
         </div>
 
-        <div class="hero__visual">
-          <div class="hero-card hero-card--main image-frame">
+        <div class="hero-showcase reveal reveal-delay-2">
+          <div class="hero-showcase__main image-frame tilt-card">
             <img src="./images/hero-main.jpg" alt="Головне фото свічок" />
+            <div class="hero-showcase__shade"></div>
+            <div class="hero-showcase__content">
+              <span class="pill">new collection</span>
+              <h2>Естетика тепла і деталей</h2>
+            </div>
           </div>
-          <div class="hero-card hero-card--small image-frame">
-            <img src="./images/hero-small.jpg" alt="Додаткове фото свічки" />
-          </div>    
+
+          <div class="hero-showcase__floating card tilt-card">
+            <div class="hero-showcase__floating-image image-frame">
+              <img src="./images/hero-small.jpg" alt="Додаткове фото свічки" />
+            </div>
+            <div class="hero-showcase__floating-body">
+              <span class="section-label">Lira Candles</span>
+              <strong>Свічки, які хочеться розглядати</strong>
+              <p>Форми, кольори й композиції, що виглядають дорого без перевантаження.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section" id="about">
-      <div class="container about">
-        <div class="about__image card image-frame">
-          <img src="./images/about.jpg" alt="Фото бренду Lira Candles" />
-        </div>
-
-        <div class="about__content card">
+    <section class="section section--split" id="about">
+      <div class="container about about--redesign">
+        <div class="about__content card reveal">
           <p class="section-label">Про бренд</p>
-          <h2>Ніжні свічки ручної роботи для затишку, декору та подарунків</h2>
+          <h2>Мʼяка кольорова гама, живі деталі та ручна робота без шаблонності</h2>
           <p>
-            Lira Candles — це свічки з натурального соєвого воску, створені з любовʼю до деталей. Вони гарно виглядають в інтерʼєрі, підходять для фотозон, подарункових наборів і просто додають дому тепла.
+            Lira Candles — це свічки з натурального соєвого воску, створені з любовʼю до форми, текстури й атмосфери. Вони легко вписуються в сучасний інтерʼєр і працюють як красивий акцент у просторі.
           </p>
-          <p>
-          </p>
-          <div class="about__chips">
+          <div class="about__chips about__chips--modern">
             <span>соєвий віск</span>
             <span>ручна робота</span>
             <span>доставка по Україні</span>
-            <span>на подарунок</span>
+            <span>індивідуальні замовлення</span>
+          </div>
+        </div>
+
+        <div class="about__stack reveal reveal-delay-1">
+          <div class="about__image card image-frame tilt-card">
+            <img src="./images/about.jpg" alt="Фото бренду Lira Candles" />
+          </div>
+          <div class="about__note card">
+            <span class="section-label">brand mood</span>
+            <p>Теплий декор, спокійні відтінки й акцент на композиції, а не просто на товарі.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section section--soft" id="catalog">
+    <section class="section section--soft section--catalog" id="catalog">
       <div class="container">
-            <div class="section-head">
-            <div>
-                <p class="section-label">Каталог</p>
-                <h2>Популярні позиції</h2>
-            </div>
+        <div class="section-head reveal">
+          <div>
+            <p class="section-label">Каталог</p>
+            <h2>Популярні позиції</h2>
+          </div>
+          <a class="btn btn--light btn--small" href="./catalog.html">Переглянути все</a>
+        </div>
 
-            <a class="btn btn--light btn--small" href="./catalog.html">Переглянути все</a>
-            </div>
-
-        <div class="catalog-grid">
-          <article class="product-card card">
+        <div class="catalog-grid catalog-grid--featured">
+          <article class="product-card card reveal tilt-card">
             <div class="product-card__image image-frame">
               <img src="./images/product-1.jpg" alt="Ромашка у кашпо" />
             </div>
@@ -121,12 +140,12 @@
                 <h3>Ромашка у кашпо</h3>
                 <strong>₴300</strong>
               </div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
+              <p>Яскравий квітковий акцент.</p>
+              <a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_1" target="_blank" rel="noopener">Замовити</a>
             </div>
           </article>
 
-          <article class="product-card card">
+          <article class="product-card card reveal reveal-delay-1 tilt-card">
             <div class="product-card__image image-frame">
               <img src="./images/product-2.jpg" alt="Троянда в кашпо" />
             </div>
@@ -135,26 +154,26 @@
                 <h3>Троянда в кашпо</h3>
                 <strong>₴300</strong>
               </div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
+              <p>Ніжний декоративний формат.</p>
+              <a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_2" target="_blank" rel="noopener">Замовити</a>
             </div>
           </article>
 
-          <article class="product-card card">
+          <article class="product-card card reveal reveal-delay-2 tilt-card">
             <div class="product-card__image image-frame">
               <img src="./images/product-3.jpg" alt="Пара ромашок у кашпо з підставкою" />
             </div>
             <div class="product-card__body">
               <div class="product-card__top">
-                <h3>Пара ромашок у кашпо з підставкою</h3>
+                <h3>Пара ромашок</h3>
                 <strong>₴600</strong>
               </div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
+              <p>Подвійна композиція на подарунок.</p>
+              <a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_3" target="_blank" rel="noopener">Замовити</a>
             </div>
           </article>
 
-          <article class="product-card card">
+          <article class="product-card card reveal tilt-card">
             <div class="product-card__image image-frame">
               <img src="./images/product-4.jpg" alt="Ромашка в склянці" />
             </div>
@@ -163,26 +182,26 @@
                 <h3>Ромашка в склянці</h3>
                 <strong>₴400</strong>
               </div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
+              <p>Квіткова свічка в склі.</p>
+              <a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_4" target="_blank" rel="noopener">Замовити</a>
             </div>
           </article>
 
-          <article class="product-card card">
+          <article class="product-card card reveal reveal-delay-1 tilt-card">
             <div class="product-card__image image-frame">
-              <img src="./images/product-5.jpg" alt="Набір &quot;Лілія&quot;" />
+              <img src="./images/product-5.jpg" alt="Набір Лілія" />
             </div>
             <div class="product-card__body">
               <div class="product-card__top">
-                <h3>Набір &quot;Лілія&quot;</h3>
+                <h3>Набір “Лілія”</h3>
                 <strong>₴400</strong>
               </div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
+              <p>Акуратний набір у теплій гамі.</p>
+              <a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_5" target="_blank" rel="noopener">Замовити</a>
             </div>
           </article>
 
-          <article class="product-card card">
+          <article class="product-card card reveal reveal-delay-2 tilt-card">
             <div class="product-card__image image-frame">
               <img src="./images/product-6.jpg" alt="Мушля" />
             </div>
@@ -191,93 +210,59 @@
                 <h3>Мушля</h3>
                 <strong>₴150</strong>
               </div>
-              <p>todo</p>
-              <a class="btn btn--primary btn--full" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Замовити</a>
+              <p>Мінімалістична декоративна форма.</p>
+              <a class="btn btn--primary btn--full" href="PASTE_LINK_PRODUCT_6" target="_blank" rel="noopener">Замовити</a>
             </div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section" id="advantages">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <p class="section-label">Переваги</p>
-            <h2>Чому обирають Lira Candles</h2>
-          </div>
-        </div>
-
-        <div class="advantages-grid">
-          <div class="advantage card">
-            <div class="advantage__icon">🕯️</div>
-            <h3>Ручна робота</h3>
-            <p>Кожна свічка створюється вручну, тому кожен виріб має свій характер і акуратний вигляд.</p>
-          </div>
-          <div class="advantage card">
-            <div class="advantage__icon">🌿</div>
-            <h3>Соєвий віск</h3>
-            <p>Натуральна основа для декоративних і ароматичних свічок, яка гарно виглядає та добре підходить для сучасного декору.</p>
-          </div>
-          <div class="advantage card">
-            <div class="advantage__icon">🎁</div>
-            <h3>Подарунковий формат</h3>
-            <p>Свічки чудово підходять для подарунків, святкових наборів і приємних сюрпризів.</p>
-          </div>
-          <div class="advantage card">
-            <div class="advantage__icon">✨</div>
-            <h3>Естетика</h3>
-            <p>Ніжні форми, теплі відтінки та красиві композиції роблять свічки частиною інтерʼєру.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="section section--soft" id="gallery">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal">
           <div>
             <p class="section-label">Галерея</p>
-            <h2>Зразки</h2>
+            <h2>Зразки робіт</h2>
           </div>
         </div>
 
-        <div class="gallery-grid">
-          <div class="gallery-item image-frame"><img src="./images/gallery-1.jpg" alt="Фото свічок 1" /></div>
-          <div class="gallery-item image-frame"><img src="./images/gallery-2.jpg" alt="Фото свічок 2" /></div>
-          <div class="gallery-item image-frame"><img src="./images/gallery-3.jpg" alt="Фото свічок 3" /></div>
-          <div class="gallery-item image-frame"><img src="./images/gallery-4.jpg" alt="Фото свічок 4" /></div>
-          <div class="gallery-item image-frame"><img src="./images/gallery-5.jpg" alt="Фото свічок 5" /></div>
-          <div class="gallery-item image-frame"><img src="./images/gallery-6.jpg" alt="Фото свічок 6" /></div>
-          <div class="gallery-item image-frame"><img src="./images/gallery-7.jpg" alt="Фото свічок 7" /></div>
-          <div class="gallery-item image-frame"><img src="./images/gallery-8.jpg" alt="Фото свічок 8" /></div>
+        <div class="gallery-grid gallery-grid--masonry">
+          <div class="gallery-item gallery-item--large image-frame reveal tilt-card"><img src="./images/gallery-1.jpg" alt="Фото свічок 1" /></div>
+          <div class="gallery-item image-frame reveal reveal-delay-1 tilt-card"><img src="./images/gallery-2.jpg" alt="Фото свічок 2" /></div>
+          <div class="gallery-item image-frame reveal reveal-delay-2 tilt-card"><img src="./images/gallery-3.jpg" alt="Фото свічок 3" /></div>
+          <div class="gallery-item image-frame reveal tilt-card"><img src="./images/gallery-4.jpg" alt="Фото свічок 4" /></div>
+          <div class="gallery-item image-frame reveal reveal-delay-1 tilt-card"><img src="./images/gallery-5.jpg" alt="Фото свічок 5" /></div>
+          <div class="gallery-item gallery-item--wide image-frame reveal reveal-delay-2 tilt-card"><img src="./images/gallery-6.jpg" alt="Фото свічок 6" /></div>
+          <div class="gallery-item image-frame reveal tilt-card"><img src="./images/gallery-7.jpg" alt="Фото свічок 7" /></div>
+          <div class="gallery-item image-frame reveal reveal-delay-1 tilt-card"><img src="./images/gallery-8.jpg" alt="Фото свічок 8" /></div>
         </div>
       </div>
     </section>
 
     <section class="section" id="contacts">
       <div class="container">
-        <div class="contact-cta card">
+        <div class="contact-cta contact-cta--modern card reveal">
           <div>
             <p class="section-label">Контакти</p>
             <h2>Хочеш замовити свічку?</h2>
-            <p class="section-text">Напиши в Instagram і швидко домовишся про форму, ціну, оформлення та деталі замовлення.</p>
+            <p class="section-text">Встав свої Telegram-посилання прямо в кнопки товарів або в основну кнопку нижче — без додаткової логіки.</p>
           </div>
-          <a class="btn btn--primary" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">Написати в Instagram</a>
+          <a class="btn btn--primary" href="PASTE_MAIN_ORDER_LINK" target="_blank" rel="noopener">Написати в Telegram</a>
         </div>
 
         <div class="contacts-grid">
-          <div class="contact-card card">
+          <div class="contact-card card reveal tilt-card">
             <h3>Основна інформація</h3>
             <div class="contact-list">
               <a class="contact-item" href="https://www.instagram.com/lira_candles_o.t/" target="_blank" rel="noopener">
                 <span>Instagram</span>
                 @lira_candles_o.t
               </a>
-              <div class="contact-item">
-                <span>Телефон</span>
-                +38 (067) 285-06-43
-              </div>
+              <a class="contact-item" href="PASTE_MAIN_ORDER_LINK" target="_blank" rel="noopener">
+                <span>Telegram</span>
+                посилання для замовлення
+              </a>
               <div class="contact-item">
                 <span>Доставка</span>
                 По Україні
@@ -285,8 +270,8 @@
             </div>
           </div>
 
-          <div class="contact-card card">
-            <h3>Додаткова інформація</h3>
+          <div class="contact-card card reveal reveal-delay-1 tilt-card">
+            <h3>Додатково</h3>
             <div class="contact-list">
               <div class="contact-item">
                 <span>Індивідуальні замовлення</span>
@@ -294,7 +279,7 @@
               </div>
               <div class="contact-item">
                 <span>Оплата</span>
-                На карту або післяплатою при отриманні
+                На карту або післяплата
               </div>
               <div class="contact-item">
                 <span>Термін виготовлення</span>
@@ -310,7 +295,7 @@
   <footer class="footer">
     <div class="container footer__inner">
       <p>© 2026 Lira Candles. Усі права захищені.</p>
-      <p>Лендінг для продажу свічок ручної роботи</p>
+      <a href="#top">Наверх ↑</a>
     </div>
   </footer>
 
