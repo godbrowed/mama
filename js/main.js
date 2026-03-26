@@ -1,6 +1,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   document.documentElement.classList.add('js-ready');
+  const API_BASE = 'https://mama-kc0f.onrender.com';
 
   const STATUS_LABELS = {
     new: 'Нове замовлення',
@@ -312,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const ids = recentOrders.map((order) => order.publicId).join(',');
-      const response = await fetch(`/api/orders/by-ids?ids=${encodeURIComponent(ids)}`);
+      const response = await fetch(`${API_BASE}/api/orders/by-ids?ids=${encodeURIComponent(ids)}`);
       if (!response.ok) throw new Error('bad response');
       const data = await response.json();
       if (Array.isArray(data.orders)) {
@@ -369,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     checkoutStatus.textContent = 'Відправляємо замовлення...';
     try {
-      const response = await fetch('/api/orders', {
+      const response = await fetch(`${API_BASE}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -399,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function cancelOrder(publicId) {
     try {
-      const response = await fetch(`/api/orders/${encodeURIComponent(publicId)}/cancel`, { method: 'POST' });
+      const response = await fetch(`${API_BASE}/api/orders/${encodeURIComponent(publicId)}/cancel`, { method: 'POST' });
       const data = await response.json();
       if (!response.ok || !data.ok) throw new Error('cancel failed');
       recentOrders = recentOrders.map((order) => order.publicId === publicId ? data.order : order);
