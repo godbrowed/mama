@@ -1,341 +1,475 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
-dotenv.config();
+document.addEventListener('DOMContentLoaded', () => {
+  document.documentElement.classList.add('js-ready');
+  const API_BASE = 'https://mama-kc0f.onrender.com';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const app = express();
-const PORT = Number(process.env.PORT || 3000);
-const BOT_TOKEN = process.env.BOT_TOKEN || '';
-const OWNER_USERNAME = (process.env.OWNER_USERNAME || 'olenatimachova').replace(/^@/, '').toLowerCase();
-const DATA_FILE = path.join(__dirname, 'backend', 'data', 'orders.json');
-
-app.use(express.json({ limit: '1mb' }));
-app.use(express.static(__dirname));
-
-const STATUSES = {
-  new: 'Нове замовлення',
-  production: 'Передано на виготовлення',
-  awaiting_delivery: 'Очікує на доставку',
-  shipping: 'Передано на доставку',
-  pickup: 'Прибуло в пункт видачі',
-  done: 'Виконано',
-  cancelled: 'Скасовано'
-};
-
-
-function readDb() {
-  try {
-    return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-  } catch {
-    return { lastId: 1000, orders: [], adminChatId: null, lastUpdateId: 0 };
-  }
-}
-
-function writeDb(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-}
-
-function statusLabel(status) {
-  return STATUSES[status] || STATUSES.new;
-}
-
-function canCancel(status) {
-  return ['new', 'production', 'awaiting_delivery'].includes(status);
-}
-
-function publicOrder(order) {
-  return {
-    publicId: order.publicId,
-    status: order.status,
-    statusLabel: statusLabel(order.status),
-    total: order.total,
-    itemsSummary: order.items.map((item) => `${item.name} × ${item.qty}`).join(', '),
-    canCancel: canCancel(order.status)
+  const STATUS_LABELS = {
+    new: 'Нове замовлення',
+    production: 'Передано на виготовлення',
+    awaiting_delivery: 'Очікує на доставку',
+    shipping: 'Передано на доставку',
+    pickup: 'Прибуло в пункт видачі',
+    done: 'Виконано',
+    cancelled: 'Скасовано'
   };
-}
 
-function sanitizeText(value = '') {
-  return String(value).replace(/[<>]/g, '').trim();
-}
+  const burger = document.getElementById('burger');
+  const nav = document.getElementById('nav');
 
-function escapeHtml(value = '') {
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-function statusEmoji(status) {
-  return {
-    new: '🆕',
-    production: '🛠️',
-    awaiting_delivery: '📦',
-    shipping: '🚚',
-    pickup: '📍',
-    done: '✅',
-    cancelled: '❌'
-  }[status] || '🆕';
-}
-
-function formatOrderText(order) {
-  const items = order.items.map((item, idx) => {
-    return `${idx + 1}. <b>${escapeHtml(item.name)}</b>\n<blockquote>${escapeHtml(item.desc)}\nКількість: <b>${item.qty}</b> · Ціна: <b>${item.price} грн</b> · Разом: <b>${item.price * item.qty} грн</b></blockquote>`;
-  }).join('\n\n');
-
-  const commentLine = order.customer.comment ? `\n<b>Коментар:</b> ${escapeHtml(order.customer.comment)}` : '';
-
-  return `${statusEmoji(order.status)} <b>Замовлення ${escapeHtml(order.publicId)}</b>\n` +
-    `<i>${escapeHtml(statusLabel(order.status))}</i>\n\n` +
-    `${items}\n\n` +
-    `💳 <b>Загальна сума:</b> ${order.total} грн\n\n` +
-    `👤 <b>Клієнт:</b> ${escapeHtml(order.customer.name)}\n` +
-    `📱 <b>Телефон:</b> ${escapeHtml(order.customer.phone)}\n` +
-    `🏙️ <b>Місто:</b> ${escapeHtml(order.customer.city)}\n` +
-    `📦 <b>Адреса / відділення:</b> ${escapeHtml(order.customer.address)}${commentLine}\n` +
-    `☎️ <b>Подзвонити:</b> ${order.customer.callMe ? 'Так' : 'Ні'}`;
-}
-
-async function telegramApi(method, payload = {}) {
-  if (!BOT_TOKEN) return null;
-  const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/${method}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  try {
-    return await res.json();
-  } catch {
-    return null;
-  }
-}
-
-function inlineKeyboard(orderId) {
-  return {
-    inline_keyboard: [
-      [
-        { text: '🛠️ Виготовлення', callback_data: `status:${orderId}:production` },
-        { text: '📦 Очікує доставку', callback_data: `status:${orderId}:awaiting_delivery` }
-      ],
-      [
-        { text: '🚚 Передано на доставку', callback_data: `status:${orderId}:shipping` },
-        { text: '📍 Прибуло', callback_data: `status:${orderId}:pickup` }
-      ],
-      [
-        { text: '✅ Виконано', callback_data: `status:${orderId}:done` },
-        { text: '❌ Скасувати', callback_data: `status:${orderId}:cancelled` }
-      ]
-    ]
-  };
-}
-
-async function notifyAdmin(order) {
-  const db = readDb();
-  if (!db.adminChatId) return;
-  await telegramApi('sendMessage', {
-    chat_id: db.adminChatId,
-    text: formatOrderText(order),
-    parse_mode: 'HTML',
-    reply_markup: inlineKeyboard(order.publicId),
-    link_preview_options: { is_disabled: true }
-  });
-}
-
-async function sendAdminMessage(text) {
-  const db = readDb();
-  if (!db.adminChatId) return;
-  await telegramApi('sendMessage', { chat_id: db.adminChatId, text, parse_mode: 'HTML', link_preview_options: { is_disabled: true } });
-}
-
-function updateOrderStatus(publicId, status) {
-  const db = readDb();
-  const order = db.orders.find((item) => item.publicId === publicId);
-  if (!order) return null;
-  order.status = status;
-  order.updatedAt = new Date().toISOString();
-  writeDb(db);
-  return order;
-}
-
-async function processUpdate(update) {
-  const db = readDb();
-
-  if (update.message?.text) {
-    const message = update.message;
-    const username = (message.from?.username || '').toLowerCase();
-    const text = message.text.trim();
-
-    if (text.startsWith('/start')) {
-      if (!OWNER_USERNAME || username === OWNER_USERNAME) {
-        db.adminChatId = message.chat.id;
-        writeDb(db);
-        await telegramApi('sendMessage', {
-          chat_id: message.chat.id,
-          text: 'Бот підключено. Команди:\n/orders — активні замовлення\n/order LC-1001 — деталі\n/status LC-1001 shipping — змінити статус\n/cancel LC-1001 — скасувати'
-        });
-      }
-      return;
-    }
-
-    if (db.adminChatId && message.chat.id !== db.adminChatId) return;
-
-    if (text.startsWith('/orders')) {
-      const active = db.orders.slice(-10).reverse();
-      if (!active.length) {
-        await telegramApi('sendMessage', { chat_id: message.chat.id, text: 'Замовлень поки немає.' });
-        return;
-      }
-      const summary = active.map((order) => `${order.publicId} — ${statusLabel(order.status)} — ${order.total} грн`).join('\n');
-      await telegramApi('sendMessage', { chat_id: message.chat.id, text: summary });
-      return;
-    }
-
-    if (text.startsWith('/order ')) {
-      const id = text.split(' ')[1]?.trim();
-      const order = db.orders.find((item) => item.publicId === id);
-      await telegramApi('sendMessage', {
-        chat_id: message.chat.id,
-        text: order ? formatOrderText(order) : 'Замовлення не знайдено.', parse_mode: order ? 'HTML' : undefined
-      });
-      return;
-    }
-
-    if (text.startsWith('/status ')) {
-      const [, id, status] = text.split(/\s+/);
-      if (!id || !status || !STATUSES[status]) {
-        await telegramApi('sendMessage', { chat_id: message.chat.id, text: 'Формат: /status LC-1001 shipping' });
-        return;
-      }
-      const order = updateOrderStatus(id, status);
-      await telegramApi('sendMessage', {
-        chat_id: message.chat.id,
-        text: order ? `Оновлено: ${id} → ${statusLabel(status)}` : 'Замовлення не знайдено.'
-      });
-      return;
-    }
-
-    if (text.startsWith('/cancel ')) {
-      const id = text.split(' ')[1]?.trim();
-      const order = updateOrderStatus(id, 'cancelled');
-      await telegramApi('sendMessage', {
-        chat_id: message.chat.id,
-        text: order ? `Замовлення ${id} скасовано.` : 'Замовлення не знайдено.'
-      });
-    }
-  }
-
-  if (update.callback_query?.data) {
-    const query = update.callback_query;
-    const [, orderId, nextStatus] = query.data.split(':');
-    const order = updateOrderStatus(orderId, nextStatus);
-    await telegramApi('answerCallbackQuery', {
-      callback_query_id: query.id,
-      text: order ? `Статус: ${statusLabel(nextStatus)}` : 'Замовлення не знайдено.'
+  if (burger && nav) {
+    burger.addEventListener('click', () => {
+      burger.classList.toggle('is-open');
+      nav.classList.toggle('is-open');
+      const expanded = burger.getAttribute('aria-expanded') === 'true';
+      burger.setAttribute('aria-expanded', String(!expanded));
+      document.body.classList.toggle('menu-open');
     });
-    if (order && query.message?.chat?.id && query.message?.message_id) {
-      await telegramApi('editMessageText', {
-        chat_id: query.message.chat.id,
-        message_id: query.message.message_id,
-        text: formatOrderText(order),
-        parse_mode: 'HTML',
-        reply_markup: inlineKeyboard(order.publicId),
-        link_preview_options: { is_disabled: true }
+
+    nav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        burger.classList.remove('is-open');
+        nav.classList.remove('is-open');
+        burger.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('menu-open');
       });
-    }
-  }
-}
-
-async function pollTelegram() {
-  if (!BOT_TOKEN) return;
-  try {
-    const db = readDb();
-    const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates?timeout=25&offset=${db.lastUpdateId + 1}`);
-    const data = await response.json();
-    if (!data.ok || !Array.isArray(data.result)) return;
-    for (const update of data.result) {
-      db.lastUpdateId = update.update_id;
-      writeDb(db);
-      await processUpdate(update);
-    }
-  } catch {}
-}
-
-app.post('/api/orders', async (req, res) => {
-  const body = req.body || {};
-  const items = Array.isArray(body.items) ? body.items : [];
-  const cleanItems = items
-    .map((item) => ({
-      name: sanitizeText(item.name),
-      desc: sanitizeText(item.desc),
-      price: Number(item.price || 0),
-      qty: Number(item.qty || 0)
-    }))
-    .filter((item) => item.name && item.price > 0 && item.qty > 0);
-
-  const customer = {
-    name: sanitizeText(body.name),
-    phone: sanitizeText(body.phone),
-    city: sanitizeText(body.city),
-    address: sanitizeText(body.address),
-    comment: sanitizeText(body.comment),
-    callMe: Boolean(body.callMe)
-  };
-
-  if (!cleanItems.length) return res.status(400).json({ ok: false, error: 'Кошик порожній' });
-  if (!customer.name || !customer.phone || !customer.city || !customer.address) {
-    return res.status(400).json({ ok: false, error: 'Не вистачає даних для замовлення' });
+    });
   }
 
-  const db = readDb();
-  db.lastId += 1;
-  const order = {
-    id: db.lastId,
-    publicId: `LC-${db.lastId}`,
-    status: 'new',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    items: cleanItems,
-    total: cleanItems.reduce((sum, item) => sum + item.price * item.qty, 0),
-    customer
-  };
-  db.orders.push(order);
-  writeDb(db);
-  await notifyAdmin(order);
-  res.json({ ok: true, order: publicOrder(order) });
-});
+  const revealItems = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && revealItems.length) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
 
-app.get('/api/orders/by-ids', (req, res) => {
-  const ids = String(req.query.ids || '').split(',').map((id) => id.trim()).filter(Boolean);
-  const db = readDb();
-  const orders = ids.map((id) => db.orders.find((order) => order.publicId === id)).filter(Boolean).map(publicOrder);
-  res.json({ ok: true, orders });
-});
-
-app.post('/api/orders/:id/cancel', async (req, res) => {
-  const id = req.params.id;
-  const db = readDb();
-  const order = db.orders.find((item) => item.publicId === id);
-  if (!order) return res.status(404).json({ ok: false, error: 'Замовлення не знайдено' });
-  if (!canCancel(order.status)) return res.status(400).json({ ok: false, error: 'Замовлення вже не можна скасувати' });
-  order.status = 'cancelled';
-  order.updatedAt = new Date().toISOString();
-  writeDb(db);
-  await sendAdminMessage(`Замовлення ${order.publicId} скасовано клієнтом.`);
-  res.json({ ok: true, order: publicOrder(order) });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  if (BOT_TOKEN) {
-    console.log('Telegram bot polling started');
-    pollTelegram();
-    setInterval(pollTelegram, 3000);
+    revealItems.forEach((item) => observer.observe(item));
   } else {
-    console.log('BOT_TOKEN is not set. Orders will save locally, but the bot will not send notifications.');
+    revealItems.forEach((item) => item.classList.add('is-visible'));
   }
+
+  const cartTrigger = document.getElementById('cartTrigger');
+  const cartDrawer = document.getElementById('cartDrawer');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const cartClose = document.getElementById('cartClose');
+  const cartItems = document.getElementById('cartItems');
+  const cartCount = document.getElementById('cartCount');
+  const cartTotal = document.getElementById('cartTotal');
+
+  const qtyModal = document.getElementById('qtyModal');
+  const qtyModalOverlay = document.getElementById('qtyModalOverlay');
+  const qtyModalClose = document.getElementById('qtyModalClose');
+  const qtyModalTitle = document.getElementById('qtyModalTitle');
+  const qtyModalPrice = document.getElementById('qtyModalPrice');
+  const qtyModalDesc = document.getElementById('qtyModalDesc');
+  const qtyMinus = document.getElementById('qtyMinus');
+  const qtyPlus = document.getElementById('qtyPlus');
+  const qtyValue = document.getElementById('qtyValue');
+  const qtyAddToCart = document.getElementById('qtyAddToCart');
+
+  const checkoutOpen = document.getElementById('checkoutOpen');
+  const checkoutModal = document.getElementById('checkoutModal');
+  const checkoutOverlay = document.getElementById('checkoutOverlay');
+  const checkoutClose = document.getElementById('checkoutClose');
+  const checkoutForm = document.getElementById('checkoutForm');
+  const checkoutStatus = document.getElementById('checkoutStatus');
+  const checkoutName = document.getElementById('checkoutName');
+  const checkoutPhone = document.getElementById('checkoutPhone');
+  const checkoutCity = document.getElementById('checkoutCity');
+  const checkoutAddress = document.getElementById('checkoutAddress');
+  const checkoutComment = document.getElementById('checkoutComment');
+  const checkoutCall = document.getElementById('checkoutCall');
+
+  const orderPageList = document.getElementById('orderPageList');
+  const orderPageRefresh = document.getElementById('orderPageRefresh');
+  const ordersTotalCount = document.getElementById('ordersTotalCount');
+  const ordersActiveCount = document.getElementById('ordersActiveCount');
+
+  let cart = [];
+  let recentOrders = [];
+  let selectedProduct = null;
+  let selectedQty = 1;
+  let toastTimer = null;
+
+  const toast = document.createElement('div');
+  toast.className = 'site-toast';
+  document.body.appendChild(toast);
+
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add('is-visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2200);
+  }
+
+  function loadState() {
+    try {
+      const savedCart = localStorage.getItem('lira_cart');
+      cart = savedCart ? JSON.parse(savedCart) : [];
+      if (!Array.isArray(cart)) cart = [];
+    } catch {
+      cart = [];
+    }
+
+    try {
+      const savedOrders = localStorage.getItem('lira_recent_orders');
+      recentOrders = savedOrders ? JSON.parse(savedOrders) : [];
+      if (!Array.isArray(recentOrders)) recentOrders = [];
+    } catch {
+      recentOrders = [];
+    }
+  }
+
+  function saveCart() {
+    localStorage.setItem('lira_cart', JSON.stringify(cart));
+  }
+
+  function saveOrders() {
+    localStorage.setItem('lira_recent_orders', JSON.stringify(recentOrders));
+  }
+
+  function totalCount() {
+    return cart.reduce((sum, item) => sum + item.qty, 0);
+  }
+
+  function totalPrice() {
+    return cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  }
+
+  function lockBody() {
+    if (
+      (cartDrawer && cartDrawer.classList.contains('is-open')) ||
+      (qtyModal && qtyModal.classList.contains('is-open')) ||
+      (checkoutModal && checkoutModal.classList.contains('is-open'))
+    ) {
+      document.body.classList.add('cart-open');
+    } else {
+      document.body.classList.remove('cart-open');
+    }
+  }
+
+  function openCart() {
+    if (!cartDrawer || !cartOverlay) return;
+    cartDrawer.classList.add('is-open');
+    cartOverlay.classList.add('is-open');
+    cartDrawer.setAttribute('aria-hidden', 'false');
+    lockBody();
+  }
+
+  function closeCart() {
+    if (!cartDrawer || !cartOverlay) return;
+    cartDrawer.classList.remove('is-open');
+    cartOverlay.classList.remove('is-open');
+    cartDrawer.setAttribute('aria-hidden', 'true');
+    lockBody();
+  }
+
+  function openQtyModal(name, price, desc) {
+    if (!qtyModal || !qtyModalOverlay) return;
+    selectedProduct = { name, price, desc };
+    selectedQty = 1;
+    if (qtyModalTitle) qtyModalTitle.textContent = name;
+    if (qtyModalPrice) qtyModalPrice.textContent = `${price} грн`;
+    if (qtyModalDesc) qtyModalDesc.textContent = desc;
+    if (qtyValue) qtyValue.textContent = '1';
+    qtyModal.classList.add('is-open');
+    qtyModalOverlay.classList.add('is-open');
+    qtyModal.setAttribute('aria-hidden', 'false');
+    lockBody();
+  }
+
+  function closeQtyModal() {
+    if (!qtyModal || !qtyModalOverlay) return;
+    qtyModal.classList.remove('is-open');
+    qtyModalOverlay.classList.remove('is-open');
+    qtyModal.setAttribute('aria-hidden', 'true');
+    lockBody();
+  }
+
+  function openCheckout() {
+    if (!checkoutModal || !checkoutOverlay) return;
+    if (!cart.length) {
+      showToast('Спочатку додайте товари в кошик');
+      return;
+    }
+    checkoutModal.classList.add('is-open');
+    checkoutOverlay.classList.add('is-open');
+    checkoutModal.setAttribute('aria-hidden', 'false');
+    lockBody();
+  }
+
+  function closeCheckout() {
+    if (!checkoutModal || !checkoutOverlay) return;
+    checkoutModal.classList.remove('is-open');
+    checkoutOverlay.classList.remove('is-open');
+    checkoutModal.setAttribute('aria-hidden', 'true');
+    lockBody();
+  }
+
+  function renderCart() {
+    if (!cartItems || !cartCount || !cartTotal) return;
+    cartCount.textContent = String(totalCount());
+    cartTotal.textContent = `${totalPrice()} грн`;
+
+    if (!cart.length) {
+      cartItems.innerHTML = '<div class="cart-empty">Кошик порожній</div>';
+      return;
+    }
+
+    cartItems.innerHTML = cart.map((item, index) => `
+      <div class="cart-item">
+        <div class="cart-item__top">
+          <div>
+            <strong>${item.name}</strong>
+            <p class="cart-item__meta">${item.desc}</p>
+          </div>
+          <div class="cart-item__price">${item.price * item.qty} грн</div>
+        </div>
+        <div class="cart-item__controls">
+          <div class="qty-box">
+            <button class="qty-btn" type="button" data-action="minus" data-index="${index}">−</button>
+            <span class="qty-value">${item.qty}</span>
+            <button class="qty-btn" type="button" data-action="plus" data-index="${index}">+</button>
+          </div>
+          <button class="cart-remove" type="button" data-action="remove" data-index="${index}">Видалити</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function getOrderProgress(status) {
+    const steps = ['new', 'production', 'awaiting_delivery', 'shipping', 'pickup', 'done'];
+    if (status === 'cancelled') return 0;
+    const index = steps.indexOf(status || 'new');
+    return index === -1 ? 8 : Math.max(8, ((index + 1) / steps.length) * 100);
+  }
+
+  function renderOrdersToPage() {
+    if (!orderPageList) return;
+
+    if (!recentOrders.length) {
+      orderPageList.innerHTML = '<div class="cart-empty orders-empty">Поки що тут порожньо. Після оформлення замовлення воно з’явиться в цьому розділі.</div>';
+      if (ordersTotalCount) ordersTotalCount.textContent = '0';
+      if (ordersActiveCount) ordersActiveCount.textContent = '0';
+      return;
+    }
+
+    const activeCount = recentOrders.filter((order) => !['done', 'cancelled'].includes(order.status)).length;
+    if (ordersTotalCount) ordersTotalCount.textContent = String(recentOrders.length);
+    if (ordersActiveCount) ordersActiveCount.textContent = String(activeCount);
+
+    orderPageList.innerHTML = recentOrders.map((order) => {
+      const status = order.status || 'new';
+      const progress = getOrderProgress(status);
+      const note = status === 'cancelled'
+        ? 'Замовлення скасовано. За потреби можна оформити нове.'
+        : status === 'done'
+          ? 'Замовлення виконано. Дякуємо за покупку ❤️'
+          : `Поточний етап: ${STATUS_LABELS[status] || 'Нове замовлення'}`;
+
+      return `
+        <article class="order-page-card order-page-card--modern">
+          <div class="order-page-card__top">
+            <div>
+              <strong>${order.publicId}</strong>
+              <p class="order-page-card__meta">${order.itemsSummary || ''}</p>
+            </div>
+            <span class="order-badge order-badge--${status}">${STATUS_LABELS[status] || 'Нове замовлення'}</span>
+          </div>
+
+          <div class="order-progress">
+            <div class="order-progress__track">
+              <span class="order-progress__fill order-progress__fill--${status}" style="width:${progress}%"></span>
+            </div>
+            <div class="order-progress__labels">
+              <span>Прийнято</span>
+              <span>Готовність</span>
+              <span>Доставка</span>
+            </div>
+          </div>
+
+          <div class="order-page-card__bottom">
+            <div>
+              <div class="order-page-card__total">${order.total || 0} грн</div>
+              <p class="order-page-card__note">${note}</p>
+            </div>
+            <div class="order-page-actions">
+              ${order.canCancel ? `<button class="order-cancel" type="button" data-order-id="${order.publicId}">Скасувати</button>` : ''}
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('');
+  }
+
+  async function refreshOrders() {
+    if (!recentOrders.length) {
+      renderOrdersToPage();
+      return;
+    }
+
+    try {
+      const ids = recentOrders.map((order) => order.publicId).join(',');
+      const response = await fetch(`${API_BASE}/api/orders/by-ids?ids=${encodeURIComponent(ids)}`);
+      if (!response.ok) throw new Error('bad response');
+      const data = await response.json();
+      if (Array.isArray(data.orders)) {
+        recentOrders = data.orders;
+        saveOrders();
+      }
+    } catch {}
+    renderOrdersToPage();
+  }
+
+  function addToCart(name, price, desc, qty) {
+    const existing = cart.find((item) => item.name === name);
+    if (existing) existing.qty += qty;
+    else cart.push({ name, price, desc, qty });
+    saveCart();
+    renderCart();
+  }
+
+  function changeQty(index, action) {
+    const item = cart[index];
+    if (!item) return;
+    if (action === 'plus') item.qty += 1;
+    if (action === 'minus') {
+      item.qty -= 1;
+      if (item.qty <= 0) cart.splice(index, 1);
+    }
+    if (action === 'remove') cart.splice(index, 1);
+    saveCart();
+    renderCart();
+  }
+
+  async function submitOrder(event) {
+    event.preventDefault();
+    if (!checkoutForm || !checkoutStatus) return;
+    if (!cart.length) {
+      checkoutStatus.textContent = 'Кошик порожній.';
+      return;
+    }
+
+    const payload = {
+      name: checkoutName?.value.trim() || '',
+      phone: checkoutPhone?.value.trim() || '',
+      city: checkoutCity?.value.trim() || '',
+      address: checkoutAddress?.value.trim() || '',
+      comment: checkoutComment?.value.trim() || '',
+      callMe: Boolean(checkoutCall?.checked),
+      items: cart
+    };
+
+    if (!payload.name || !payload.phone || !payload.city || !payload.address) {
+      checkoutStatus.textContent = 'Заповніть ім’я, телефон, місто та адресу.';
+      return;
+    }
+
+    checkoutStatus.textContent = 'Відправляємо замовлення...';
+    try {
+      const response = await fetch(`${API_BASE}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok || !data.ok) throw new Error(data.error || 'Помилка');
+
+      checkoutStatus.textContent = `Замовлення ${data.order.publicId} оформлено. Наш менеджер звʼяжеться з вами.`;
+      recentOrders.unshift(data.order);
+      saveOrders();
+      cart = [];
+      saveCart();
+      renderCart();
+      renderOrdersToPage();
+      checkoutForm.reset();
+
+      setTimeout(() => {
+        closeCheckout();
+        closeCart();
+      }, 900);
+
+      showToast(`Замовлення ${data.order.publicId} оформлено`);
+    } catch {
+      checkoutStatus.textContent = 'Не вдалося оформити замовлення. Спробуйте ще раз.';
+    }
+  }
+
+  async function cancelOrder(publicId) {
+    try {
+      const response = await fetch(`${API_BASE}/api/orders/${encodeURIComponent(publicId)}/cancel`, { method: 'POST' });
+      const data = await response.json();
+      if (!response.ok || !data.ok) throw new Error('cancel failed');
+      recentOrders = recentOrders.map((order) => order.publicId === publicId ? data.order : order);
+      saveOrders();
+      renderOrdersToPage();
+      showToast(`Замовлення ${publicId} скасовано`);
+    } catch {
+      showToast('Не вдалося скасувати замовлення');
+    }
+  }
+
+  document.querySelectorAll('.product-order').forEach((button) => {
+    button.addEventListener('click', () => {
+      openQtyModal(
+        button.dataset.product || 'Товар',
+        Number(button.dataset.price || 0),
+        button.dataset.desc || 'Декоративна свічка ручної роботи.'
+      );
+    });
+  });
+
+  if (qtyMinus) qtyMinus.addEventListener('click', () => {
+    selectedQty = Math.max(1, selectedQty - 1);
+    if (qtyValue) qtyValue.textContent = String(selectedQty);
+  });
+
+  if (qtyPlus) qtyPlus.addEventListener('click', () => {
+    selectedQty += 1;
+    if (qtyValue) qtyValue.textContent = String(selectedQty);
+  });
+
+  if (qtyAddToCart) qtyAddToCart.addEventListener('click', () => {
+    if (!selectedProduct) return;
+    addToCart(selectedProduct.name, selectedProduct.price, selectedProduct.desc, selectedQty);
+    closeQtyModal();
+    showToast(`Додано: ${selectedProduct.name}`);
+  });
+
+  if (cartItems) {
+    cartItems.addEventListener('click', (event) => {
+      const target = event.target.closest('[data-action]');
+      if (!target) return;
+      changeQty(Number(target.dataset.index), target.dataset.action);
+    });
+  }
+
+  if (orderPageList) {
+    orderPageList.addEventListener('click', (event) => {
+      const button = event.target.closest('.order-cancel');
+      if (!button) return;
+      cancelOrder(button.dataset.orderId);
+    });
+  }
+
+  if (orderPageRefresh) orderPageRefresh.addEventListener('click', refreshOrders);
+  if (cartTrigger) cartTrigger.addEventListener('click', openCart);
+  if (cartClose) cartClose.addEventListener('click', closeCart);
+  if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
+
+  if (qtyModalClose) qtyModalClose.addEventListener('click', closeQtyModal);
+  if (qtyModalOverlay) qtyModalOverlay.addEventListener('click', closeQtyModal);
+
+  if (checkoutOpen) checkoutOpen.addEventListener('click', openCheckout);
+  if (checkoutClose) checkoutClose.addEventListener('click', closeCheckout);
+  if (checkoutOverlay) checkoutOverlay.addEventListener('click', closeCheckout);
+  if (checkoutForm) checkoutForm.addEventListener('submit', submitOrder);
+
+  loadState();
+  renderCart();
+  renderOrdersToPage();
+  refreshOrders();
 });
