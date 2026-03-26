@@ -1,0 +1,73 @@
+{
+  "lastId": 1002,
+  "orders": [
+    {
+      "id": 1001,
+      "publicId": "LC-1001",
+      "status": "new",
+      "createdAt": "2026-03-17T21:50:10.461Z",
+      "updatedAt": "2026-03-17T21:50:10.461Z",
+      "items": [
+        {
+          "name": "Ромашка у кашпо",
+          "desc": "Декоративна соєва свічка у формі ромашки.",
+          "price": 300,
+          "qty": 1
+        },
+        {
+          "name": "Троянда в кашпо",
+          "desc": "Ніжна квіткова свічка ручної роботи.",
+          "price": 300,
+          "qty": 1
+        }
+      ],
+      "total": 600,
+      "customer": {
+        "name": "zxc",
+        "phone": "zxc",
+        "city": "zxc",
+        "address": "zxc",
+        "comment": "zxc",
+        "callMe": true
+      }
+    },
+    {
+      "id": 1002,
+      "publicId": "LC-1002",
+      "status": "pickup",
+      "createdAt": "2026-03-18T14:01:29.966Z",
+      "updatedAt": "2026-03-18T14:02:03.407Z",
+      "items": [
+        {
+          "name": "Троянда в кашпо",
+          "desc": "Ніжна квіткова свічка ручної роботи.",
+          "price": 300,
+          "qty": 1
+        },
+        {
+          "name": "Пара ромашок",
+          "desc": "Композиція з двох ромашок для декору.",
+          "price": 600,
+          "qty": 1
+        },
+        {
+          "name": "Набір “Лілія”",
+          "desc": "Декоративний набір свічок у ніжному стилі.",
+          "price": 400,
+          "qty": 1
+        }
+      ],
+      "total": 1300,
+      "customer": {
+        "name": "qwe",
+        "phone": "qwe",
+        "city": "qwe",
+        "address": "qwerqwe",
+        "comment": "qwrqwrqwerqwrqwr",
+        "callMe": true
+      }
+    }
+  ],
+  "adminChatId": 1708543238,
+  "lastUpdateId": 810354064
+}

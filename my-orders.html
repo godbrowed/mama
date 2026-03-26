@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Мої замовлення — Lira Candles</title>
+<meta content="Перегляд активних замовлень Lira Candles." name="description"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet"/>
+<link href="./css/style.css" rel="stylesheet"/>
+</head>
+<body class="orders-page">
+<div class="page-glow page-glow--one"></div>
+<div class="page-glow page-glow--two"></div>
+<header class="header" id="top">
+  <div class="container header__inner">
+    <a class="logo" href="./index.html#home">Lira <span>Candles</span></a>
+    <nav class="nav" id="nav">
+      <a href="./index.html#about">Про бренд</a>
+      <a href="./index.html#catalog">Каталог</a>
+      <a href="./catalog.html">Весь каталог</a>
+      <a href="./my-orders.html">Мої замовлення</a>
+      <a href="./index.html#contacts">Контакти</a>
+    </nav>
+    <div class="header__actions">
+      <a class="btn btn--dark btn--small hide-mobile" href="./catalog.html">Замовити</a>
+      <button aria-label="Відкрити меню" aria-controls="nav" aria-expanded="false" class="burger" id="burger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="orders-hero">
+    <div class="container orders-hero__grid">
+      <div class="orders-hero__copy reveal">
+        <span class="eyebrow">order tracking · updates · delivery</span>
+        <h1>Мої замовлення</h1>
+        <p>Тут можна подивитися статус кожного замовлення, оновити інформацію та скасувати замовлення, якщо воно ще не передане в доставку.</p>
+        <div class="orders-hero__actions">
+          <button class="btn btn--primary" id="orderPageRefresh" type="button">Оновити статуси</button>
+          <a class="btn btn--light" href="./catalog.html">Повернутись у каталог</a>
+        </div>
+      </div>
+      <div class="orders-hero__panel orders-hero__panel--modern card reveal reveal-delay-1">
+        <div class="orders-hero__stats orders-hero__stats--modern">
+          <div class="orders-stat orders-stat--primary">
+            <span>Усього</span>
+            <strong id="ordersTotalCount">0</strong>
+            <small>замовлень у вашому профілі</small>
+          </div>
+          <div class="orders-stat">
+            <span>Активні</span>
+            <strong id="ordersActiveCount">0</strong>
+            <small>виготовлення, доставка, видача</small>
+          </div>
+        </div>
+        <div class="orders-status-preview">
+          <div class="orders-status-pill is-production">Виготовлення</div>
+          <div class="orders-status-pill is-awaiting">Очікує доставку</div>
+          <div class="orders-status-pill is-shipping">У дорозі</div>
+          <div class="orders-status-pill is-pickup">Прибуло</div>
+        </div>
+        <div class="orders-hero__hint">
+          <strong>Усе в одному місці</strong>
+          <p>Перевіряйте актуальний статус, оновлюйте сторінку та скасовуйте замовлення, якщо воно ще не передане в доставку.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--soft">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <p class="section-label">Статуси</p>
+          <h2>Активні замовлення</h2>
+        </div>
+        <a class="btn btn--light btn--small" href="./index.html#contacts">Потрібна допомога?</a>
+      </div>
+      <div class="orders-page__list reveal reveal-delay-1" id="orderPageList">
+        <div class="cart-empty orders-empty">Поки що тут порожньо. Після оформлення замовлення воно з’явиться в цьому розділі.</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p>© 2026 Lira Candles. Усі права захищені.</p>
+    <a href="./index.html">На головну ↑</a>
+  </div>
+</footer>
+<script src="./js/main.js"></script>
+</body>
+</html>
