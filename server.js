@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -9,6 +10,20 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
+app.use(cors({
+  origin: [
+    'https://mama-pi-indol.vercel.app',
+    'https://mama-kc0f.onrender.com',
+    'http://127.0.0.1:5500',
+    'http://localhost:5500'
+  ],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  credentials: false
+}));
+
+app.use(express.json({ limit: '1mb' }));
+app.use(express.static(__dirname));
+
 const PORT = Number(process.env.PORT || 3000);
 const BOT_TOKEN = process.env.BOT_TOKEN || '';
 const OWNER_USERNAME = (process.env.OWNER_USERNAME || 'olenatimachova').replace(/^@/, '').toLowerCase();
